@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>國立東華大學 AI Agent 校園實作成果報告 | Presentation</title>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --blue: #2563eb;
+      --light-blue: #60a5fa;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --green: #10b981;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--navy);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide-wrapper {
+      width: 92vw;
+      max-width: 1200px;
+      aspect-ratio: 16 / 9;
+      background-color: var(--bg);
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 3rem 4rem;
+      animation: fadeIn 0.3s ease-in-out;
+      flex-direction: column;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-header {
+      margin-bottom: 2rem;
+    }
+
+    .category-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--blue);
+      margin-bottom: 0.4rem;
+    }
+
+    .slide-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      flex: 1;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      flex: 1;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-tag {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      background-color: #eff6ff;
+      color: var(--blue);
+    }
+
+    .card-tag.green { background-color: #ecfdf5; color: var(--green); }
+    .card-tag.red { background-color: #fef2f2; color: var(--red); }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-list {
+      list-style: none;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .card-list li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .card-list li::before {
+      content: "•";
+      color: var(--blue);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    /* Cover slide */
+    .slide-cover {
+      background-color: var(--navy);
+      color: white;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 4rem 5rem;
+    }
+
+    .slide-cover .category-tag {
+      color: var(--light-blue);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .slide-cover .slide-title {
+      font-size: 3rem;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+
+    .slide-cover .subtitle {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      max-width: 800px;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .slide-cover .badge {
+      display: inline-block;
+      background-color: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--green);
+      color: #6ee7b7;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    /* Controls bar */
+    .controls {
+      position: absolute;
+      bottom: 1.25rem;
+      right: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    .btn-ctrl {
+      background-color: rgba(15, 23, 42, 0.08);
+      border: none;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .slide-cover ~ .controls .btn-ctrl,
+    .slide-cover.active ~ .controls .btn-ctrl {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .btn-ctrl:hover {
+      background-color: rgba(15, 23, 42, 0.18);
+    }
+
+    .slide-counter {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .code-pill {
+      background-color: #f1f5f9;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--blue);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-wrapper">
+    <!-- Slide 1: Cover -->
+    <div class="slide slide-cover active">
+      <div class="category-tag">東華大學 · 校園 AI Agent 實作成果報告</div>
+      <h1 class="slide-title">讓 AI 幫你完成校園小事<br><span style="font-size: 2.2rem; color: #93c5fd;">NDHU Campus Agent Lab (agent-lab-w05)</span></h1>
+      <p class="subtitle">從日常校園情境出發：看懂計畫、檢查成果、堅守邊界、退回危險做法。<br>學生儲存庫：<strong style="color: white;">ann030/agent-lab-w05</strong></p>
+      <div class="badge">✅ 全任務通過：Task A、B (v1/v2)、C、D 與學習紀錄存證</div>
+    </div>
+
+    <!-- Slide 2: Objectives -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="category-tag">CORE OBJECTIVES</div>
+        <h2 class="slide-title">核心目標：培養 AI 協作的四大關鍵判斷力</h2>
+      </div>
+      <div class="grid-4">
+        <div class="card">
+          <span class="card-tag">PLAN</span>
+          <div class="card-title">1. 看懂計畫</div>
+          <ul class="card-list">
+            <li>在 AI 動手前審查白話計畫</li>
+            <li>確認輸入與輸出路徑</li>
+            <li>辨認破壞性或越權操作</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag green">VERIFY</span>
+          <div class="card-title">2. 檢查成果</div>
+          <ul class="card-list">
+            <li>使用客觀指標（如 Hash 雜湊）</li>
+            <li>逐項執行驗收測試案例</li>
+            <li>比對檔案副本與原檔一致性</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag">BOUNDARY</span>
+          <div class="card-title">3. 辨認權限</div>
+          <ul class="card-list">
+            <li>嚴守最小權限與工作區隔離</li>
+            <li>原始資料一律保持唯讀</li>
+            <li>未經授權絕不外連或公開</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag red">REJECT</span>
+          <div class="card-title">4. 退回做法</div>
+          <ul class="card-list">
+            <li>發現高風險指令時果斷拒絕</li>
+            <li>精準指出問題核心</li>
+            <li>提供安全合規的替代方案</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Task A -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="category-tag">TASK A · 01-CLUB-FILES</div>
+        <h2 class="slide-title">社團檔案安全整理與盤點</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag">安全準則</span>
+          <div class="card-title">整理原則與原檔保護</div>
+          <ul class="card-list">
+            <li><strong>原檔絕對不動：</strong> <span class="code-pill">input/</span> 12 個文字檔保持唯讀，不刪除、不覆蓋。</li>
+            <li><strong>拒絕盲信檔名：</strong> <span class="code-pill">proposal_final</span> 與 <span class="code-pill">proposal_final2</span> 內容完全不同（室外 vs 室內），皆標註未定案，不可自行刪除。</li>
+            <li>安全複製至 <span class="code-pill">proposals</span>, <span class="code-pill">meetings</span>, <span class="code-pill">logistics</span>, <span class="code-pill">promotion</span> 四大目錄。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag green">驗收成果</span>
+          <div class="card-title">雜湊驗收與結構化產出</div>
+          <ul class="card-list">
+            <li><strong>MD5 雜湊比對：</strong> 精準抓出完全相同的兩組檔案（<span class="code-pill">announcement</span> 與 <span class="code-pill">equipment</span>），全數保留副本。</li>
+            <li><strong>結構化清單：</strong> 產出 <span class="code-pill">output/manifest.json</span>（最外層 12 筆物件陣列，記錄 source, destination, reason）。</li>
+            <li><strong>盤點報告：</strong> 產出 <span class="code-pill">output/report.md</span> 詳列重複檔案與待決策問題。</li>
+            <li><strong>Git Commit：</strong> <span class="code-pill">A: organize club files</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Task B -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="category-tag">TASK B · 02-CAMPUS-PICKER</div>
+        <h2 class="slide-title">課間活動挑選器：單頁應用與 v1 到 v2 迭代</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag">v1 基礎功能</span>
+          <div class="card-title">純前端單頁離線應用</div>
+          <ul class="card-list">
+            <li><strong>零外部依賴：</strong> 內嵌 12 筆活動資料，無 CDN、無網路請求，雙擊即可開啟。</li>
+            <li><strong>多條件嚴格篩選：</strong> 地點（室內/室外/不限）、可用時間（15/30/60m）、強度（低/中/不限）。</li>
+            <li><strong>不放寬條件：</strong> 無符合活動時顯示「沒有符合條件的活動」，堅持原則。</li>
+            <li>最近 5 筆歷史（最新在前）、重設篩選、中英雙語切換。</li>
+            <li><strong>Git Commit：</strong> <span class="code-pill">B v1: activity picker</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag green">v2 體驗升級</span>
+          <div class="card-title">新增鍵盤快捷鍵支援</div>
+          <ul class="card-list">
+            <li><strong>現況 (v1)：</strong> 僅能點擊滑鼠按鈕抽卡，連續測試或手持鍵盤不便。</li>
+            <li><strong>改進 (v2)：</strong> 按鍵盤 <span class="code-pill">Space</span>（空白鍵）或 <span class="code-pill">Enter</span> 直接觸發隨機挑選！</li>
+            <li><strong>微動態回饋：</strong> 按鈕微縮動態與畫面多語系快捷鍵提示。</li>
+            <li><strong>防呆機制：</strong> 展開下拉選單時自動忽略，不干擾原生瀏覽器操作。</li>
+            <li><strong>Git Commit：</strong> <span class="code-pill">B v2: add Space and Enter shortcuts...</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Task C -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="category-tag">TASK C · 03-EQUIPMENT</div>
+        <h2 class="slide-title">社團器材記錄清理：數據正規化與異常保留</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag">資料清洗</span>
+          <div class="card-title">清洗與正規化規則</div>
+          <ul class="card-list">
+            <li>文字欄位去除前後贅餘空白；<span class="code-pill">qty</span> 欄位不套用去空白規則，嚴格保留原值。</li>
+            <li>狀態值標準化：可借/可出借/available 統一為 <span class="code-pill">available</span>；借出統一為 <span class="code-pill">borrowed</span>。</li>
+            <li>非標準狀態（如第 9 列「待盤點」）標記為 <span class="code-pill">unknown</span>。</li>
+            <li>整列全空才可移除：10 列原始資料正規化為 9 列有效（第 6 列移除）。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag green">客觀存證</span>
+          <div class="card-title">異常值保留與品質報告</div>
+          <ul class="card-list">
+            <li><strong>保留異常：</strong> 缺漏數量（<span class="code-pill">qty: ""</span>）與負數（<span class="code-pill">qty: -1</span>）原樣保留，不擅自補 0 或取絕對值。</li>
+            <li><strong>保留衝突：</strong> 相同 ID（EQ01, EQ02）全部保留，指出來源列號與數量衝突（2 vs 3）。</li>
+            <li>產出 <span class="code-pill">normalized.json</span> 與 <span class="code-pill">issues.md</span>。</li>
+            <li><strong>Git Commit：</strong> <span class="code-pill">C: clean equipment records</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Task D -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="category-tag">TASK D · 04-REVIEW</div>
+        <h2 class="slide-title">安全防線：審查刻意寫錯的模擬計畫 (bad-plan.txt)</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag red">問題診斷</span>
+          <div class="card-title">圈出 5 大高風險違規動作</div>
+          <ul class="card-list">
+            <li>❌ <strong>整理 Downloads 全部：</strong> 越權掃描個人隱私目錄 ➔ 限縮於工作資料夾。</li>
+            <li>❌ <strong>擅自刪除重複檔：</strong> 破壞不可逆 ➔ 原檔唯讀，保留副本供人工審查。</li>
+            <li>❌ <strong>final2 當最新版：</strong> 盲目認定 ➔ 完整保留不同版本並列出差異。</li>
+            <li>❌ <strong>找不到補合理值：</strong> 數據偽造 ➔ 異常值原樣保留呈報。</li>
+            <li>❌ <strong>自動公開成果：</strong> 敏感資料外洩 ➔ 成果留存本地 output。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag">退回範本</span>
+          <div class="card-title">撰寫正式退回指令 (my-rejection.md)</div>
+          <ul class="card-list">
+            <li>產出正式審查文檔：<span class="code-pill">practice/04-review/my-rejection.md</span>。</li>
+            <li><strong>向 Agent 傳達明確指令：</strong>「這份計畫有多項不符規範，請停止並重新修正：限制工作目錄、原檔唯讀、不以 final 判定、異常原樣保留、成果僅存本地。重新提出白話計畫，確認後才可執行。」</li>
+            <li><strong>Git Commit：</strong> <span class="code-pill">D: rejection</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Summary -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="category-tag">SUMMARY & REFLECTION</div>
+        <h2 class="slide-title">實作歷程總覽與人機協作思維</h2>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag">GIT HISTORY</span>
+          <div class="card-title">完整 6 階段提交鏈</div>
+          <ul class="card-list">
+            <li><span class="code-pill">815acee</span> record: learning record and screenshots</li>
+            <li><span class="code-pill">ba2a1f3</span> C: clean equipment records</li>
+            <li><span class="code-pill">97917bb</span> D: rejection</li>
+            <li><span class="code-pill">b452c63</span> B v2: add Space and Enter shortcuts...</li>
+            <li><span class="code-pill">7752faa</span> B v1: activity picker</li>
+            <li><span class="code-pill">85941bd</span> A: organize club files</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="card-tag green">KEY TAKEAWAYS</span>
+          <div class="card-title">結語：負責任的 AI 協作心態</div>
+          <ul class="card-list">
+            <li><strong>人是核心決策者：</strong> 權限邊界、安全審核與業務邏輯決定權在人。</li>
+            <li><strong>AI 是高效率副駕駛：</strong> 擅長大量分類、比對、清洗與生成，但需明確指示。</li>
+            <li><strong>凡事皆有憑據：</strong> 透過 Git Commit 與學習紀錄留存客觀數據與軌跡。</li>
+            <li><strong>安全與合規第一：</strong> 拒絕黑盒操作，堅持看懂白話計畫才放行。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn-ctrl" onclick="prevSlide()">◀ 上一張</button>
+      <span class="slide-counter" id="slide-num">1 / 7</span>
+      <button class="btn-ctrl" onclick="nextSlide()">下一張 ▶</button>
+    </div>
+  </div>
+
+  <script>
+    let currentIdx = 0;
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('slide-num');
+
+    function showSlide(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= slides.length) idx = slides.length - 1;
+      slides[currentIdx].classList.remove('active');
+      currentIdx = idx;
+      slides[currentIdx].classList.add('active');
+      counter.textContent = `${currentIdx + 1} / ${slides.length}`;
+    }
+
+    function prevSlide() { showSlide(currentIdx - 1); }
+    function nextSlide() { showSlide(currentIdx + 1); }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
