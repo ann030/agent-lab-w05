@@ -1,0 +1,62 @@
+[
+  {
+    "source": "announcement.txt",
+    "destination": "promotion/announcement.txt",
+    "reason": "活動通知公告文案，歸類於文宣推廣"
+  },
+  {
+    "source": "announcement_copy.txt",
+    "destination": "promotion/announcement_copy.txt",
+    "reason": "活動通知公告之完全重複副本，依規範保留副本"
+  },
+  {
+    "source": "budget_draft.txt",
+    "destination": "logistics/budget_draft.txt",
+    "reason": "活動紙張預算草案（尚未核定），歸類於物資與預算"
+  },
+  {
+    "source": "equipment_backup.txt",
+    "destination": "logistics/equipment_backup.txt",
+    "reason": "器材清單之備份副本，依規範保留副本"
+  },
+  {
+    "source": "equipment_list.txt",
+    "destination": "logistics/equipment_list.txt",
+    "reason": "活動器材需求清單，歸類於物資與預算"
+  },
+  {
+    "source": "feedback_questions.txt",
+    "destination": "promotion/feedback_questions.txt",
+    "reason": "活動滿意度回饋問卷題目，歸類於文宣與回饋"
+  },
+  {
+    "source": "meeting_notes.txt",
+    "destination": "meetings/meeting_notes.txt",
+    "reason": "籌備會議記錄與待討論事項，歸類於會議與待辦"
+  },
+  {
+    "source": "next_steps.txt",
+    "destination": "meetings/next_steps.txt",
+    "reason": "活動後續行動規劃與方案比較步驟，歸類於會議與待辦"
+  },
+  {
+    "source": "poster_text.txt",
+    "destination": "promotion/poster_text.txt",
+    "reason": "活動宣傳海報標語文案，歸類於文宣推廣"
+  },
+  {
+    "source": "proposal_final.txt",
+    "destination": "proposals/proposal_final.txt",
+    "reason": "企畫第一版（戶外活動30分鐘，尚未定案），歸類於企畫方案"
+  },
+  {
+    "source": "proposal_final2.txt",
+    "destination": "proposals/proposal_final2.txt",
+    "reason": "企畫第二版（室內活動20分鐘，待討論），歸類於企畫方案"
+  },
+  {
+    "source": "rain_plan.txt",
+    "destination": "proposals/rain_plan.txt",
+    "reason": "活動雨天應變備案，歸類於企畫方案"
+  }
+]
