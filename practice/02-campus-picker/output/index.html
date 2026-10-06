@@ -317,6 +317,7 @@
         <button class="btn-primary" id="btn-pick" onclick="pickActivity()">幫我選</button>
         <button class="btn-secondary" id="btn-reset" onclick="resetFilters()">重設篩選</button>
       </div>
+      <div id="shortcut-hint" style="margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;">⌨️ 快捷鍵：可按 Space（空白鍵）或 Enter 鍵快速挑選</div>
     </div>
 
     <!-- 抽選結果 -->
@@ -386,7 +387,8 @@
         locOutdoor: "室外",
         energyLow: "低強度",
         energyMed: "中強度",
-        minSuffix: "分鐘"
+        minSuffix: "分鐘",
+        shortcutHint: "⌨️ 快捷鍵：可按 Space（空白鍵）或 Enter 鍵快速挑選"
       },
       en: {
         appTitle: "What should I do during the break?",
@@ -416,7 +418,8 @@
         locOutdoor: "Outdoor",
         energyLow: "Low Energy",
         energyMed: "Medium Energy",
-        minSuffix: "mins"
+        minSuffix: "mins",
+        shortcutHint: "⌨️ Shortcut: Press Space or Enter to pick an activity"
       }
     };
 
@@ -434,6 +437,7 @@
       document.getElementById('lbl-energy').textContent = t.lblEnergy;
       document.getElementById('btn-pick').textContent = t.btnPick;
       document.getElementById('btn-reset').textContent = t.btnReset;
+      document.getElementById('shortcut-hint').textContent = t.shortcutHint;
       document.getElementById('lbl-result-title').textContent = t.resultTitle;
       document.getElementById('lbl-history-title').textContent = t.historyTitle;
       document.getElementById('btn-clear-history').textContent = t.btnClearHistory;
@@ -561,6 +565,23 @@
         `;
       }).join('');
     }
+
+    // 鍵盤快捷鍵：按 Space 或 Enter 觸發隨機挑選（不干擾下拉選單原生操作）
+    window.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName : '';
+      if (['SELECT', 'INPUT', 'TEXTAREA'].includes(activeTag)) {
+        return;
+      }
+      if (e.code === 'Space' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        pickActivity();
+        const btn = document.getElementById('btn-pick');
+        if (btn) {
+          btn.style.transform = 'scale(0.96)';
+          setTimeout(() => { btn.style.transform = ''; }, 120);
+        }
+      }
+    });
 
     // 初始化介面語言
     updateTexts();
